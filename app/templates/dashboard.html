@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-title">
+    CustomerPulse — AI Retention Assistant
+</div>
+
+<div class="page-subtitle">
+    Identify churn risks • Protect revenue • Simulate ROI before investing
+</div>
+
+<div class="section" style="background: linear-gradient(90deg, #EFF6FF, #E0F2FE); border-left: 5px solid #3B82F6;">
+    <p style="margin:0; font-size:15px;">
+        CustomerPulse analyzes subscription data using machine learning to predict churn probability,
+        quantify revenue exposure, and recommend strategic retention actions.
+    </p>
+</div>
+
+<!-- ================= KPI CARDS ================= -->
+<div class="cards">
+    <div class="card card-blue">
+        <h3>Total Customers</h3>
+        <p>{{ total }}</p>
+    </div>
+
+    <div class="card card-red">
+        <h3>High Risk Customers</h3>
+        <p>{{ high }}</p>
+    </div>
+
+    <div class="card card-orange">
+        <h3>Revenue At Risk</h3>
+        <p>₹ {{ revenue_at_risk }}</p>
+    </div>
+
+    <div class="card card-green">
+        <h3>Estimated ROI</h3>
+        <p>₹ {{ roi }}</p>
+    </div>
+</div>
+
+
+<!-- ================= BUSINESS IMPACT ================= -->
+<div class="section">
+    <h3>What This Means For Your Business</h3>
+
+    <div style="line-height:1.7;">
+        <p>
+            You currently have <strong>{{ high }}</strong> customers at high risk of leaving.
+            This represents <strong>₹ {{ revenue_at_risk }}</strong> in potential monthly revenue loss.
+        </p>
+
+        <p>
+            By targeting high-priority customers with personalized retention strategies,
+            you can reduce churn and improve long-term customer lifetime value.
+        </p>
+
+        <div style="margin-top:15px;">
+            <strong>Immediate Focus Areas:</strong>
+            <ul style="margin-top:8px;">
+                <li>Month-to-month contract customers</li>
+                <li>High monthly charge subscribers</li>
+                <li>Customers with low tenure</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- ================= RISK CHART ================= -->
+<div class="section">
+    <h3>Risk Distribution</h3>
+
+    <div style="max-width: 280px; margin: 20px auto;">
+        <canvas id="riskChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('riskChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['High', 'Medium', 'Low'],
+            datasets: [{
+                data: [{{ high }}, {{ medium }}, {{ low }}],
+                backgroundColor: ['#EF4444', '#F59E0B', '#10B981'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
+
+<!-- ================= AI INSIGHT ================= -->
+<div class="section">
+    <h3>Executive Insight</h3>
+
+    {% if role == "manager" %}
+        <p>
+            Revenue exposure is currently <b>₹ {{ revenue_at_risk }}</b>.
+            Immediate retention intervention is recommended for high-risk customers
+            to protect recurring subscription income.
+        </p>
+
+        <p>
+            Estimated retention ROI: <b>₹ {{ roi }}</b>.
+        </p>
+    {% else %}
+        <p>
+            Customers on <b>{{ highest_contract }}</b> contracts show the highest average churn probability.
+            Strategic focus should prioritize high-value customers with short tenure.
+        </p>
+    {% endif %}
+</div>
+
+
+<!-- ================= TOP 10 TABLE ================= -->
+{% if role == "analyst" %}
+<div class="section">
+    <h3>Top 10 Strategic Priority Customers</h3>
+    <table>
+        <tr>
+            <th>Tenure</th>
+            <th>Contract</th>
+            <th>Monthly Charges</th>
+            <th>Priority Score</th>
+            <th>Recommended Action</th>
+        </tr>
+
+        {% for row in top10 %}
+        <tr>
+            <td>{{ row.tenure }}</td>
+            <td>{{ row.Contract }}</td>
+            <td>{{ row.MonthlyCharges }}</td>
+            <td>{{ "%.2f"|format(row.PriorityScore) }}</td>
+            <td>{{ row.RecommendedAction }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+<div class="section" style="background:#F1F5F9;">
+    <h3>How CustomerPulse Works</h3>
+
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:20px; margin-top:20px;">
+
+        <div class="card" style="background:#EFF6FF;">
+            <h4>1️⃣ Predict</h4>
+            <p style="font-size:14px;">
+                Machine learning model analyzes subscription patterns to calculate churn probability.
+            </p>
+        </div>
+
+        <div class="card" style="background:#FEF3C7;">
+            <h4>2️⃣ Prioritize</h4>
+            <p style="font-size:14px;">
+                Customers are ranked using risk and revenue value to identify strategic priority.
+            </p>
+        </div>
+
+        <div class="card" style="background:#DCFCE7;">
+            <h4>3️⃣ Quantify</h4>
+            <p style="font-size:14px;">
+                Revenue at risk is calculated to measure financial exposure.
+            </p>
+        </div>
+
+        <div class="card" style="background:#FEE2E2;">
+            <h4>4️⃣ Simulate</h4>
+            <p style="font-size:14px;">
+                ROI simulator estimates expected return before launching retention campaigns.
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

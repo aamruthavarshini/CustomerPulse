@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-title">Model Reliability</div>
+<div class="page-subtitle">
+This system predicts churn with {{ accuracy*100 }}% overall accuracy.
+</div>
+
+<div class="cards">
+
+    <div class="card">
+        <h4>Accuracy</h4>
+        <p>{{ accuracy }}</p>
+    </div>
+
+    <div class="card">
+        <h4>Precision</h4>
+        <p>{{ precision }}</p>
+    </div>
+
+    <div class="card">
+        <h4>Recall</h4>
+        <p>{{ recall }}</p>
+    </div>
+
+</div>
+<div class="section">
+    <div class="card">
+        <p>
+            The model has been trained on historical churn patterns.
+            Precision measures how accurately high-risk customers are identified.
+            Recall measures how many actual churn cases are captured.
+        </p>
+    </div>
+</div>
+
+<div class="section">
+    <h3>Confusion Matrix</h3>
+
+    <table>
+        <tr>
+            <th></th>
+            <th>Predicted: No</th>
+            <th>Predicted: Yes</th>
+        </tr>
+        <tr>
+            <th>Actual: No</th>
+            <td>{{ cm[0][0] }}</td>
+            <td>{{ cm[0][1] }}</td>
+        </tr>
+        <tr>
+            <th>Actual: Yes</th>
+            <td>{{ cm[1][0] }}</td>
+            <td>{{ cm[1][1] }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h3>Top Churn Drivers</h3>
+
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Impact</th>
+        </tr>
+
+        {% for feature, value in feature_importance %}
+        <tr>
+            <td>{{ feature }}</td>
+            <td>{{ "%.3f"|format(value) }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+{% endblock %}

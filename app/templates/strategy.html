@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-title">Retention Strategy Simulator</div>
+<div class="page-subtitle">Evaluate ROI of retention campaigns</div>
+
+<div class="section">
+    <form method="POST" class="cards">
+
+        <div class="card">
+            <h4>Recovery Rate (%)</h4>
+            <input type="number" name="recovery_rate" value="{{ recovery_rate }}" required>
+        </div>
+
+        <div class="card">
+            <h4>Retention Cost per Customer (₹)</h4>
+            <input type="number" name="retention_cost" value="{{ retention_cost }}" required>
+        </div>
+
+        <div class="card" style="display:flex; align-items:center; justify-content:center;">
+            <button type="submit" class="primary-btn">Simulate</button>
+        </div>
+
+    </form>
+</div>
+
+<div class="section">
+    <h3>Simulation Results</h3>
+
+    <div class="cards">
+        <div class="card">
+            <h4>Revenue At Risk</h4>
+            <p class="red">₹ {{ revenue_at_risk }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Expected Revenue Saved</h4>
+            <p class="green">₹ {{ expected_revenue_saved }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Total Campaign Cost</h4>
+            <p>₹ {{ total_campaign_cost }}</p>
+        </div>
+
+        <div class="card">
+            <h4>Projected ROI</h4>
+            <p class="{{ 'green' if roi_raw > 0 else 'red' }}">
+                ₹ {{ roi }}
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
